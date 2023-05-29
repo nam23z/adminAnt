@@ -1,6 +1,18 @@
 import { FileOutlined, PieChartOutlined, UserOutlined,DesktopOutlined, TeamOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { useState } from 'react';
+import Logo from '../../assets/logo.png';
+import styled from 'styled-components';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+
+const StyledLogo = styled.div`
+    width: 200px;
+    img{
+        width: 100%;
+    }
+`
+
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
   return {
@@ -11,22 +23,41 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-    getItem('Option 1', '1', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
+    getItem('Dashboard', '/', <PieChartOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
-      getItem('Tom', '3'),
-      getItem('Bill', '4'),
-      getItem('Alex', '5'),
+        getItem('List User', '/listUser'),
+        getItem('CRUD User', '3'),
+        getItem('User Role', '4'),
     ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    getItem('Files', '9', <FileOutlined />),
+    getItem('Customers', 'sub2',<FileOutlined/>,[
+        getItem('List Customers', '5'),
+        getItem('Export File', '6'),
+    ]),
+    getItem('Products', 'sub3', <TeamOutlined />, [
+        getItem('List Product', '7'),
+        getItem('CRUD Product', '8')
+    ]),
+    getItem('Orders', 'sub4', <DesktopOutlined />,[
+        getItem('List Orders', '9'),
+        getItem('Status Orders', '10')
+    ]),
+    getItem('Coupon', 'sub5', <DesktopOutlined />,[
+        getItem('List Coupon', '11'),
+        getItem('CRUD Coupon', '12')
+    ]),
   ];
 
-const LayoutPrimary = () => {
+const LayoutPrimary = ({children}) => {
     const [collapsed, setCollapsed] = useState(false);
     const {
       token: { colorBgContainer },
     } = theme.useToken();
+
+    const pac = (e) => {
+
+      console.log(e.key);
+      return e.key;
+    }
     return (
       <Layout
         style={{
@@ -34,8 +65,12 @@ const LayoutPrimary = () => {
         }}
       >
         <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-          <div className="demo-logo-vertical"><h1>NCN</h1></div>
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+          <div className="demo-logo-vertical">
+            <StyledLogo>
+                <img className='logo' src={Logo} alt="logo" />
+            </StyledLogo>
+            </div>
+          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={pac}><NavLink to={pac}></NavLink></Menu>
         </Sider>
         <Layout>
           <Header
@@ -44,7 +79,7 @@ const LayoutPrimary = () => {
               background: colorBgContainer,
             }}
           >
-            <h1>ahihi</h1>
+            {/* {pac} */}
           </Header>
           <Content
             style={{
@@ -56,18 +91,19 @@ const LayoutPrimary = () => {
                 margin: '16px 0',
               }}
             >
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            {/* {console.log(items.map((item)=> {return <Breadcrumb.Item>{item.label}</Breadcrumb.Item>}))} */}
+              {/* <Breadcrumb.Item>User</Breadcrumb.Item>
+              <Breadcrumb.Item>Bill</Breadcrumb.Item> */}
             </Breadcrumb>
-            <div
-              style={{
-                padding: 24,
-                minHeight: 360,
-                background: colorBgContainer,
-              }}
-            >
-              Bill is a cat.
-            </div>
+              <div
+            style={{
+              padding: 24,
+              minHeight: 360,
+              background: colorBgContainer,
+            }}
+          >
+            {children}
+          </div>
           </Content>
           <Footer
             style={{
