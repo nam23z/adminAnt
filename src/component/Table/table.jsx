@@ -131,7 +131,8 @@ const Tabled = () => {
 //add user
   const [listUser, setFormUser] = useState(data);
   const onFinish = (user) => {
-    const newData = [
+    const newData = 
+    [
       ...listUser,
       {
         key: Math.floor(Math.random() * 10000) + 1,
@@ -238,7 +239,7 @@ const Tabled = () => {
         rowSelection={rowSelection}
         columns={columns}
         dataSource={listUser}
-        pagination={position[0]}
+        pagination={{showSizeChanger: false}}
       />
     </StyledTable>
   );
