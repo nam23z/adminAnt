@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Logo from '../../assets/logo.png';
 import styled from 'styled-components';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 const StyledLogo = styled.div`
     width: 200px;
@@ -19,13 +20,13 @@ function getItem(label, key, icon, children) {
     key,
     icon,
     children,
-    label,
+    label
   };
 }
 const items = [
-    getItem('Dashboard', '/', <PieChartOutlined />),
+    getItem('Dashboard', '1', <PieChartOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
-        getItem('List User', '/listUser'),
+        getItem('List User', '2'),
         getItem('CRUD User', '3'),
         getItem('User Role', '4'),
     ]),
@@ -53,10 +54,17 @@ const LayoutPrimary = ({children}) => {
       token: { colorBgContainer },
     } = theme.useToken();
 
+    let navigate = useNavigate()
+    const [selectedMenu, setSelectedMenu] = useState("1")
     const pac = (e) => {
-
-      console.log(e.key);
-      return e.key;
+      if(e.key === "1"){
+        setSelectedMenu("1");
+        navigate("/");
+      }
+      if(e.key === "2"){
+        setSelectedMenu("2");
+        navigate("/user")
+      }
     }
     return (
       <Layout
@@ -70,7 +78,7 @@ const LayoutPrimary = ({children}) => {
                 <img className='logo' src={Logo} alt="logo" />
             </StyledLogo>
             </div>
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={pac}><NavLink to={pac}></NavLink></Menu>
+          <Menu theme="dark" SelectedKeys={selectedMenu} items={items} mode="inline" onClick={pac}></Menu>
         </Sider>
         <Layout>
           <Header
