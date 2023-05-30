@@ -73,7 +73,6 @@ const StyledTable = styled.div`
   }
 `;
 const Tabled = () => {
-  const position = ["bottomCenter", "bottomRight"];
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -173,11 +172,19 @@ const Tabled = () => {
   return (
     <StyledTable>
       <Row align="middle">
-        <Col flex={14}>
+        <Col flex={2}>
           <h2>Users</h2>
         </Col>
-        <Col flex={2}>
-          <Button onClick={showModal}>Add User</Button>
+        <Col flex={2} offset={20}>
+          <Button onClick={showModal} type="primary">Add User</Button>
+        </Col>
+      </Row>
+      <Table
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={listUser}
+        pagination={{showSizeChanger: false}}
+      />
           <Modal
             title="Basic Modal"
             open={isModalOpen}
@@ -233,14 +240,6 @@ const Tabled = () => {
               </Form.Item>
             </Form>
           </Modal>
-        </Col>
-      </Row>
-      <Table
-        rowSelection={rowSelection}
-        columns={columns}
-        dataSource={listUser}
-        pagination={{showSizeChanger: false}}
-      />
     </StyledTable>
   );
 };
