@@ -1,70 +1,9 @@
-import { Space, Table, Tag, Button, Col, Row, Modal, Form, Input } from "antd";
+import { Space, Table, Button, Col, Row, Modal, Form, Input } from "antd";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-//table
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <span>{text}</span>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "tester") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <Button type="primary">
-            Edit
-            {/* {record.name} */}
-            </Button>
-        <Button danger>Delete</Button>
-      </Space>
-    ),
-  },
-];
-const data = [];
-
-for (let i = 0; i < 50; i++) {
-  data.push({
-    key: i,
-    name: `Edward King ${i}`,
-    age: 20 + i,
-    address: `London, Park Lane no. ${i}`,
-    tags: i % 2 === 0 ? ["nice", "developer"] : ["tester"],
-  });
-}
+const { Column } = Table;
 
 const StyledTable = styled.div`
   .css-dev-only-do-not-override-w8mnev.ant-table-wrapper
@@ -73,9 +12,10 @@ const StyledTable = styled.div`
   }
 `;
 const Tabled = () => {
+  //select row table
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    // console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -115,60 +55,54 @@ const Tabled = () => {
       },
     ],
   };
-  // Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  const [form] = Form.useForm();
-//add user
-  const [listUser, setFormUser] = useState(data);
-  const onFinish = (user) => {
-    const newData = 
-    [
-      ...listUser,
-      {
-        key: Math.floor(Math.random() * 10000) + 1,
-        name: user.name,
-        age: user.age,
-        address: user.address,
-        tags: ["cool", "teacher"],
-      },
-    ];
-    setFormUser(newData);
-  };
-  //form
-  const SubmitButton = ({ form }) => {
-    const [submittable, setSubmittable] = useState(false);
+  // state management
+  const usersStore = useSelector((state) => state.users);
+  const dispatch = useDispatch();
 
-    // Watch all values
-    const values = Form.useWatch([], form);
-    useEffect(() => {
-      form
-        .validateFields({
-          validateOnly: true,
-        })
-        .then(
-          () => {
-            setSubmittable(true);
-          },
-          () => {
-            setSubmittable(false);
-          }
-        );
-    }, [values]);
-    return (
-      <Button type="primary" htmlType="submit" disabled={!submittable}>
-        Submit
-      </Button>
-    );
+  useEffect(() => {
+    dispatch.users.fetchUsers();
+  }, []);
+  // Modal
+  const [modalAdd, setModalAdd] = useState(false);
+
+  const [form] = Form.useForm();
+  // form add user
+  const onAddUser = (user) => {
+    if(form.getFieldValue("id")){
+      const id =  form.getFieldsValue().id;
+      const ind = usersStore.listUser.findIndex((ye)=> ye.id === id);
+      let ahihi = [...usersStore.listUser]
+      ahihi[ind] = form.getFieldsValue();
+      dispatch.users.setListUser(ahihi);
+    }else{
+      const newData = [
+        ...usersStore.listUser,
+        {
+          id: Math.floor(Math.random() * 10000) + 1,
+          name: user.name,
+          age: user.age,
+          address: user.address,
+        },
+      ];
+      dispatch.users.setListUser(newData);
+    }
+    console.log(form.getFieldsValue());
   };
+  const deletee = (idd) =>{
+    const id =  form.getFieldsValue().id;
+    const ind = usersStore.listUser.findIndex((ye)=> ye.id === idd);
+    let ahihi = [...usersStore.listUser]
+    ahihi.splice(ind, 1);
+    dispatch.users.setListUser(ahihi);
+  }
+  //show modal edit
+  const showModalEdit = (id) => {
+    setModalAdd(true);
+    const a = usersStore.listUser.find((hi)=>hi.id === id);
+    form.setFieldsValue({["id"]: a.id,["name"]: a.name,["username"]: a.username, ["address"]: a.address.city})
+  };
+  // const onedit = () => {
+  // };
   return (
     <StyledTable>
       <Row align="middle">
@@ -176,70 +110,131 @@ const Tabled = () => {
           <h2>Users</h2>
         </Col>
         <Col flex={2} offset={20}>
-          <Button onClick={showModal} type="primary">Add User</Button>
+          <Button
+            onClick={() => {
+              setModalAdd(true);
+            }}
+            type="primary"
+          >
+            Add User
+          </Button>
         </Col>
       </Row>
-      <Table
-        rowSelection={rowSelection}
-        columns={columns}
-        dataSource={listUser}
-        pagination={{showSizeChanger: false}}
-      />
-          <Modal
-            title="Basic Modal"
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            footer={null}
+      <Modal
+        title="Modal"
+        open={modalAdd}
+        onOk={() => {
+          setModalAdd(false);
+        }}
+        onCancel={() => {
+          setModalAdd(false);
+        }}
+        footer={null}
+      >
+        <Form
+          form={form}
+          name="validateOnly"
+          layout="vertical"
+          autoComplete="off"
+          onFinish={onAddUser}
+        >
+          <Form.Item
+            name="id"
+            label="Id"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
           >
-            <Form
-              form={form}
-              name="validateOnly"
-              layout="vertical"
-              autoComplete="off"
-              onFinish={onFinish}
-            >
-              <Form.Item
-                name="name"
-                label="Name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="age"
-                label="Age"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="address"
-                label="Address"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item>
-                <Space>
-                  <SubmitButton form={form} />
-                  <Button htmlType="reset">Reset</Button>
-                </Space>
-              </Form.Item>
-            </Form>
-          </Modal>
+            <Input/>
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input/>
+          </Form.Item>
+          <Form.Item
+            name="username"
+            label="UserName"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="address"
+            label="Address"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item>
+            <Space>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+              <Button htmlType="reset">Reset</Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Table
+        dataSource={usersStore.listUser}
+        rowSelection={rowSelection}
+        pagination={{ showSizeChanger: false }}
+      >
+        <Column title="Id" dataIndex="id" key="id"></Column>
+        <Column title="Name" dataIndex="name" key="name" />
+        <Column title="UserName" dataIndex="username" key="username" />
+        <Column title="Email" dataIndex="email" key="email" />
+        {/* <Column
+          title="Address"
+          dataIndex="address"
+          key="address"
+          render={(address) => (
+            <>
+              {address.map((address) => {
+                let color = address.length > 5 ? "geekblue" : "green";
+          if (address === "tester") {
+            color = "volcano";
+          }
+          return (
+            <Tag color={color} key={address}>
+              {address.toUpperCase()}
+            </Tag>
+          );
+          })}
+            </>
+          )}
+        /> */}
+        <Column
+          title="Action"
+          key="action"
+          dataIndex="id"
+          render={(id) => (
+            <Space size="middle">
+              <Button type="primary" onClick={() => showModalEdit(id)}>
+                Edit
+              </Button>
+              <Button danger onClick={()=>{deletee(id)}}>Delete</Button>
+            </Space>
+          )}
+        />
+      </Table>
     </StyledTable>
   );
 };

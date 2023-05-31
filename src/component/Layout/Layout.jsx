@@ -24,7 +24,6 @@ import { useState } from "react";
 import Logo from "../../assets/logo.png";
 import styled from "styled-components";
 import React from "react";
-// import { NavLink } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
 const StyledLogo = styled.div`
@@ -60,24 +59,18 @@ const items = [
   getItem("Dashboard", "1", <PieChartOutlined />),
   getItem("User", "sub1", <UserOutlined />, [
     getItem("List User", "2"),
-    getItem("CRUD User", "3"),
-    getItem("User Role", "4"),
   ]),
   getItem("Customers", "sub2", <FileOutlined />, [
-    getItem("List Customers", "5"),
-    getItem("Export File", "6"),
+    getItem("List Customers", "3"),
   ]),
   getItem("Products", "sub3", <TeamOutlined />, [
-    getItem("List Product", "7"),
-    getItem("CRUD Product", "8"),
+    getItem("List Product", "4"),
   ]),
   getItem("Orders", "sub4", <DesktopOutlined />, [
-    getItem("List Orders", "9"),
-    getItem("Status Orders", "10"),
+    getItem("List Orders", "5"),
   ]),
   getItem("Coupon", "sub5", <DesktopOutlined />, [
-    getItem("List Coupon", "11"),
-    getItem("CRUD Coupon", "12"),
+    getItem("List Coupon", "6"),
   ]),
 ];
 
@@ -88,15 +81,16 @@ const LayoutPrimary = ({ children }) => {
   } = theme.useToken();
 
   let navigate = useNavigate();
-  const [selectedMenu, setSelectedMenu] = useState("1");
+  const [selectedMenuu, setSelectedMenu] = useState("1");
   const pac = (e) => {
+    // e.preventDefault();
     if (e.key === "1") {
       setSelectedMenu("1");
       navigate("/");
     }
     if (e.key === "2") {
       setSelectedMenu("2");
-      navigate("/user");
+      navigate("/user",{replace: true});
     }
   };
   return (
@@ -118,7 +112,8 @@ const LayoutPrimary = ({ children }) => {
           </div>
           <Menu
             theme="dark"
-            SelectedKeys={selectedMenu}
+            defaultSelectedKeys={[selectedMenuu]}
+            defaultOpenKeys={['sub1']}
             items={items}
             mode="inline"
             onClick={pac}
