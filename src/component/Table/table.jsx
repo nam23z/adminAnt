@@ -99,7 +99,7 @@ const Tabled = () => {
   const showModalEdit = (id) => {
     setModalAdd(true);
     const a = usersStore.listUser.find((hi)=>hi.id === id);
-    form.setFieldsValue({["id"]: a.id,["name"]: a.name,["username"]: a.username, ["address"]: a.address.city})
+    form.setFieldsValue({["id"]: a.id,["name"]: a.name,["username"]: a.username, ["email"]: a.email})
   };
   // const onedit = () => {
   // };
@@ -172,8 +172,8 @@ const Tabled = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="address"
-            label="Address"
+            name="email"
+            label="Email"
             rules={[
               {
                 required: true,
