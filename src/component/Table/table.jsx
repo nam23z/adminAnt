@@ -2,6 +2,7 @@ import { Space, Table, Button, Col, Row, Modal, Form, Input } from "antd";
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Excel from '../Excel/index';
 
 const { Column } = Table;
 
@@ -10,51 +11,11 @@ const StyledTable = styled.div`
     .ant-table-pagination-right {
     justify-content: center;
   }
+  .ip-id{
+    display: none;
+  }
 `;
 const Tabled = () => {
-  //select row table
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const onSelectChange = (newSelectedRowKeys) => {
-    // console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: "odd",
-        text: "Select Odd Row",
-        onSelect: (changeableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changeableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: "even",
-        text: "Select Even Row",
-        onSelect: (changeableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changeableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
-  };
   // state management
   const usersStore = useSelector((state) => state.users);
   const dispatch = useDispatch();
@@ -118,6 +79,50 @@ const Tabled = () => {
           >
             Add User
           </Button>
+      <Excel
+          fileName="export-user"
+          data={[
+            {
+              columns: [
+                {
+                  title: "User Id",
+                  dataIndex: "id",
+                  width: 5,
+                },
+                {
+                  title: "Name",
+                  dataIndex: "username",
+                  width: 20,
+                },
+                {
+                  title: "Email",
+                  dataIndex: "email",
+                  width: 50,
+                },
+              ],
+              data: usersStore.listUser,
+              tabName: "info",
+            },
+            {
+              columns: [
+                {
+                  title: "Name",
+                  dataIndex: "username",
+                  width: 30,
+                },
+                {
+                  title: "Phone",
+                  dataIndex: "phone",
+                  width: 30,
+                },
+              ],
+              data: usersStore.listUser,
+              tabName: "contact",
+            },
+          ]}
+        >
+          <Button>Export users</Button>
+        </Excel>
         </Col>
       </Row>
       <Modal
@@ -139,15 +144,17 @@ const Tabled = () => {
           onFinish={onAddUser}
         >
           <Form.Item
+          className="ip-id"
             name="id"
             label="Id"
+            hidden="true"
             rules={[
               {
-                required: true,
+                required: false,
               },
             ]}
           >
-            <Input/>
+            <Input />
           </Form.Item>
           <Form.Item
             name="name"
@@ -194,7 +201,7 @@ const Tabled = () => {
       </Modal>
       <Table
         dataSource={usersStore.listUser}
-        rowSelection={rowSelection}
+        // rowSelection={rowSelection}
         pagination={{ showSizeChanger: false }}
       >
         <Column title="Id" dataIndex="id" key="id"></Column>

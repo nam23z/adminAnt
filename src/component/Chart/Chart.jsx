@@ -1,9 +1,7 @@
-import React from "react";
-// import ReactDOM from "react-dom";
-import { Line, G2 } from "@ant-design/plots";
+import React, { useState, useEffect } from 'react';
+import { Line } from '@ant-design/plots';
+import styled from 'styled-components';
 
-import { each, findIndex } from "@antv/util";
-import styled from "styled-components";
 
 const StyledChart = styled.div`
   height: 200px;
@@ -12,192 +10,160 @@ const StyledChart = styled.div`
   }
 `;
 
-const Chart = () => {
-  const { InteractionAction, registerInteraction, registerAction } = G2;
-  const data = [
+ export const Chart = () => {
+  
+    const data = [
     {
-      year: "2020",
-      value: 20000,
-    },
-    {
-      year: "2021",
-      value: 21000,
+      "Date": "12:00",
+      "scales": 55
     },
     {
-      year: "2022",
-      value: 22000,
+      "Date": "12:20",
+      "scales": 45
     },
     {
-      year: "2023",
-      value: 23000,
+      "Date": "12:40",
+      "scales": 42
     },
-  ];
-  G2.registerShape("point", "custom-point", {
-    draw(cfg, container) {
-      const point = {
-        x: cfg.x,
-        y: cfg.y,
-      };
-      const group = container.addGroup();
-      group.addShape("circle", {
-        name: "outer-point",
-        attrs: {
-          x: point.x,
-          y: point.y,
-          fill: cfg.color || "blue",
-          opacity: 0.5,
-          r: 6,
-        },
-      });
-      group.addShape("circle", {
-        name: "inner-point",
-        attrs: {
-          x: point.x,
-          y: point.y,
-          fill: cfg.color || "white",
-          opacity: 1,
-          r: 2,
-        },
-      });
-      return group;
+    {
+      "Date": "1:00",
+      "scales": 48
     },
-  });
-
-  class CustomMarkerAction extends InteractionAction {
-    active() {
-      const view = this.getView();
-      const evt = this.context.event;
-
-      if (evt.data) {
-        // items: 数组对象，当前 tooltip 显示的每条内容
-        const { items } = evt.data;
-        const pointGeometries = view.geometries.filter(
-          (geom) => geom.type === "point"
-        );
-        each(pointGeometries, (pointGeometry) => {
-          each(pointGeometry.elements, (pointElement, idx) => {
-            const active =
-              findIndex(items, (item) => item.data === pointElement.data) !==
-              -1;
-            const [point0, point1] = pointElement.shape.getChildren();
-
-            if (active) {
-              // outer-circle
-              point0.animate(
-                {
-                  r: 10,
-                  opacity: 0.2,
-                },
-                {
-                  duration: 1800,
-                  easing: "easeLinear",
-                  repeat: true,
-                }
-              ); // inner-circle
-
-              point1.animate(
-                {
-                  r: 6,
-                  opacity: 0.4,
-                },
-                {
-                  duration: 800,
-                  easing: "easeLinear",
-                  repeat: true,
-                }
-              );
-            } else {
-              this.resetElementState(pointElement);
-            }
-          });
-        });
-      }
+    {
+      "Date": "1:20",
+      "scales": 54
+    },
+    {
+      "Date": "1:40",
+      "scales": 58
+    },
+    {
+      "Date": "2:00",
+      "scales": 64
+    },
+    {
+      "Date": "2:20",
+      "scales": 67
+    },
+    {
+      "Date": "2:40",
+      "scales": 20
+    },
+    {
+      "Date": "3:00",
+      "scales": 6
+    },
+    {
+      "Date": "3:20",
+      "scales": 19
+    },
+    {
+      "Date": "3:40",
+      "scales": 40
+    },
+    {
+      "Date": "4:00",
+      "scales": 50
+    },
+    {
+      "Date": "4:20",
+      "scales": 70
+    },
+    {
+      "Date": "4:40",
+      "scales": 73
+    },
+    {
+      "Date": "5:00",
+      "scales": 80
+    },
+    {
+      "Date": "5:20",
+      "scales": 27
+    },
+    {
+      "Date": "5:40",
+      "scales": 28
+    },
+    {
+      "Date": "6:00",
+      "scales": 15
+    },
+    {
+      "Date": "6:20",
+      "scales": 11
+    },
+    {
+      "Date": "6:40",
+      "scales": 19
+    },
+    {
+      "Date": "7:00",
+      "scales": 76
+    },
+    {
+      "Date": "7:20",
+      "scales": 56
+    },
+    {
+      "Date": "7:40",
+      "scales": 80
+    },
+    {
+      "Date": "8:00",
+      "scales": 43
+    },
+    {
+      "Date": "8:20",
+      "scales": 80
+    },
+    {
+      "Date": "8:40",
+      "scales": 10
+    },
+    {
+      "Date": "9:00",
+      "scales": 80
+    },
+    {
+      "Date": "9:20",
+      "scales": 68
+    },
+    {
+      "Date": "9:40",
+      "scales": 69
+    },
+    {
+      "Date": "10:00",
+      "scales": 45
+    },
+    {
+      "Date": "10:20",
+      "scales": 39
+    },
+    {
+      "Date": "10:40",
+      "scales": 19
+    },
+    {
+      "Date": "11:00",
+      "scales": 20
     }
-
-    reset() {
-      const view = this.getView();
-      const points = view.geometries.filter((geom) => geom.type === "point");
-      each(points, (point) => {
-        each(point.elements, (pointElement) => {
-          this.resetElementState(pointElement);
-        });
-      });
-    }
-
-    resetElementState(element) {
-      const [point0, point1] = element.shape.getChildren();
-      point0.stopAnimate();
-      point1.stopAnimate();
-      const { r, opacity } = point0.get("attrs");
-      point0.attr({
-        r,
-        opacity,
-      });
-      const { r: r1, opacity: opacity1 } = point1.get("attrs");
-      point1.attr({
-        r: r1,
-        opacity: opacity1,
-      });
-    }
-
-    getView() {
-      return this.context.view;
-    }
-  }
-
-  registerAction("custom-marker-action", CustomMarkerAction);
-  registerInteraction("custom-marker-interaction", {
-    start: [
-      {
-        trigger: "tooltip:show",
-        action: "custom-marker-action:active",
+  ]
+    const config = {
+      data,
+      padding: 'auto',
+      xField: 'Date',
+      yField: 'scales',
+      color: 'l(0) 0:#9747FF 1:#14F4C9 ',
+      xAxis: {
+        tickCount: 12,
       },
-    ],
-    end: [
-      {
-        trigger: "tooltip:hide",
-        action: "custom-marker-action:reset",
-      },
-    ],
-  });
-  const config = {
-    data,
-    xField: "year",
-    yField: "value",
-    label: {},
-    point: {
-      size: 5,
-      shape: "custom-point",
-      style: {
-        fill: "white",
-        stroke: "#5B8FF9",
-        lineWidth: 2,
-      },
-    },
-    tooltip: {
-      showMarkers: false,
-    },
-    state: {
-      active: {
-        style: {
-          shadowBlur: 4,
-          stroke: "#000",
-          fill: "red",
-        },
-      },
-    },
-    interactions: [
-      {
-        type: "custom-marker-interaction",
-      },
-    ],
-  };
+      smooth: true,
+    };
   return(
     <StyledChart>
         <Line {...config} />
     </StyledChart>
   )
-  
 };
-
-export default Chart;

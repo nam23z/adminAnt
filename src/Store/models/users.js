@@ -24,7 +24,6 @@ export const users = {
       async fetchUsers(payload, rootState) {
         const data = await fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json());
-        console.log(data);
         this.setListUser(data);
       }
     }),
