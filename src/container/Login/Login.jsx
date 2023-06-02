@@ -7,7 +7,8 @@ import { ReactComponent as Google } from "../../assets/Google.svg";
 import { ReactComponent as Github } from "../../assets/Github.svg";
 import { ReactComponent as Facebook } from "../../assets/Facebook.svg";
 import { Form, Field } from "react-final-form";
-import { FORM_ERROR } from "final-form";
+import { useNavigate} from "react-router-dom";
+import axios from 'axios';
 const StyledLogIn = styled.div`
   background-image: linear-gradient(90deg, #ffffff 0%, #bbaaff 100%);
   width: 100%;
@@ -104,17 +105,19 @@ const StyledFormLog = styled.div`
   }
 `;
 
-const onSubmit = async values => {
-    if (values.username !== 'congnam') {
-      return { username: 'Unknown username' }
-    }
-    if (values.password !== 'finalform') {
-      return { [FORM_ERROR]: 'Login Failed' }
-    }
-    window.alert('LOGIN SUCCESS!')
-  }
 
 const LogIn = () => {
+  let navigate = useNavigate();
+  const onSubmit = async values => {
+      axios.post('https://dummyjson.com/auth/login', values)
+      .then((res)=>{
+              navigate("/");
+            })
+            .catch((res)=>{
+              console.log(res);
+            })
+      
+}
   return (
     <StyledLogIn>
       <StyledFormLog>

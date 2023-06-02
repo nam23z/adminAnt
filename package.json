@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.5.1",
     "antv": "^0.2.2",
+    "axios": "^1.4.0",
     "dayjs": "^1.11.7",
     "final-form": "^4.20.9",
     "react": "^18.2.0",

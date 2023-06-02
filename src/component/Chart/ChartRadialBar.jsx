@@ -40,7 +40,7 @@ export const ChartRadialBar = () => {
 
     return (
       <ResponsiveContainer width="100%" height="100%" minWidth={500} minHeight={500}>
-        <RadialBarChart startAngle={90} endAngle={360} cx="50%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={20} data={data}>
+        <RadialBarChart startAngle={90} endAngle={450} cx="50%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={20} data={data}>
           <RadialBar
             minAngle={105}
             // label={{ position: 'insideStart', fill: '#fff' }}

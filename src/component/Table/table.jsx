@@ -24,18 +24,12 @@ const Tabled = () => {
     dispatch.users.fetchUsers();
   }, []);
   // Modal
-  const [modalAdd, setModalAdd] = useState(false);
+  const [modal, setModal] = useState(false);
 
   const [form] = Form.useForm();
   // form add user
   const onAddUser = (user) => {
-    if(form.getFieldValue("id")){
-      const id =  form.getFieldsValue().id;
-      const ind = usersStore.listUser.findIndex((ye)=> ye.id === id);
-      let ahihi = [...usersStore.listUser]
-      ahihi[ind] = form.getFieldsValue();
-      dispatch.users.setListUser(ahihi);
-    }else{
+    if(!form.getFieldValue("id")){
       const newData = [
         ...usersStore.listUser,
         {
@@ -46,8 +40,15 @@ const Tabled = () => {
         },
       ];
       dispatch.users.setListUser(newData);
+    }else{
+      let id =  form.getFieldsValue().id;
+      const ind = usersStore.listUser.findIndex((ye)=> ye.id === id);
+      let ahihi = [...usersStore.listUser];
+      ahihi[ind] = form.getFieldsValue();
+      dispatch.users.setListUser(ahihi);
     }
     console.log(form.getFieldsValue());
+    // form.resetFields();
   };
   const deletee = (idd) =>{
     const id =  form.getFieldsValue().id;
@@ -58,12 +59,14 @@ const Tabled = () => {
   }
   //show modal edit
   const showModalEdit = (id) => {
-    setModalAdd(true);
+    setModal(true);
     const a = usersStore.listUser.find((hi)=>hi.id === id);
     form.setFieldsValue({["id"]: a.id,["name"]: a.name,["username"]: a.username, ["email"]: a.email})
   };
-  // const onedit = () => {
-  // };
+  const showModalAdd = () =>{
+    setModal(true);
+    form.resetFields();
+  }
   return (
     <StyledTable>
       <Row align="middle">
@@ -73,7 +76,7 @@ const Tabled = () => {
         <Col flex={2} offset={20}>
           <Button
             onClick={() => {
-              setModalAdd(true);
+              showModalAdd();
             }}
             type="primary"
           >
@@ -127,12 +130,12 @@ const Tabled = () => {
       </Row>
       <Modal
         title="Modal"
-        open={modalAdd}
+        open={modal}
         onOk={() => {
-          setModalAdd(false);
+          setModal(false);
         }}
         onCancel={() => {
-          setModalAdd(false);
+          setModal(false);
         }}
         footer={null}
       >
