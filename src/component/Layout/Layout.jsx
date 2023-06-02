@@ -25,6 +25,7 @@ import Logo from "../../assets/logo.png";
 import styled from "styled-components";
 import React from "react";
 import { useNavigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const StyledLogo = styled.div`
   width: 200px;
@@ -89,6 +90,7 @@ const LayoutPrimary = () => {
       navigate("/user");
     }
   };
+  const auth = useSelector((state)=>state.auth);
   return (
     <StyledLayout>
       <Layout
@@ -132,7 +134,7 @@ const LayoutPrimary = () => {
                   <BellOutlined />
                   <div className="iconUser">
                     <Avatar size="small" icon={<AntDesignOutlined />}/>
-                    Ahihi
+                    {auth.username}
                   </div>
                   <TranslationOutlined />
                 </Space>

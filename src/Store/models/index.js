@@ -1,2 +1,3 @@
 import { users } from './users';
-export {users};
+import { auth } from './auth';
+export {users, auth};

@@ -1,23 +1,32 @@
+import axios from "axios";
 export const auth = {
-    state: {
-      username: "l",
-      password:"******",
+  state: {
+    authentication: false,
+    username: "",
     }, // initial state
     reducers: {
       // handle state changes with pure functions
       setUsername(state, username) {
         return {
-            ...state,
-            username,
-          };
+          ...state,
+          username,
+        };
       },
-    },
-    effects: (dispatch) => ({
-      // handle state changes with impure functions.
-      // use async/await for async actions
-      // async incrementAsync(payload, rootState) {
-      //   await new Promise((resolve) => setTimeout(resolve, 1000));
-      //   dispatch.count.increment(payload);
-      // },
+      setAuthentication(state, authentication) {
+        return {
+          ...state,
+            authentication,
+          };
+        },
+      },
+      effects: (dispatch) => ({
+      login(loginReq){
+        return axios.post('https://dummyjson.com/auth/login', loginReq)
+      }
+    }),
+    selectors: (slice, createSelector) => ({
+      selectAuth() {
+        return slice(state => state.authentication);
+      },
     }),
   };

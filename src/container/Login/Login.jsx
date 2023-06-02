@@ -8,7 +8,7 @@ import { ReactComponent as Github } from "../../assets/Github.svg";
 import { ReactComponent as Facebook } from "../../assets/Facebook.svg";
 import { Form, Field } from "react-final-form";
 import { useNavigate} from "react-router-dom";
-import axios from 'axios';
+import { useSelector, useDispatch } from "react-redux";
 const StyledLogIn = styled.div`
   background-image: linear-gradient(90deg, #ffffff 0%, #bbaaff 100%);
   width: 100%;
@@ -108,16 +108,20 @@ const StyledFormLog = styled.div`
 
 const LogIn = () => {
   let navigate = useNavigate();
+  const selectAuth = useSelector((state)=> state.auth);
+  const dispatch = useDispatch();
   const onSubmit = async values => {
-      axios.post('https://dummyjson.com/auth/login', values)
-      .then((res)=>{
-              navigate("/");
-            })
-            .catch((res)=>{
-              console.log(res);
-            })
-      
+   const response = dispatch.auth.login(values)
+   response.then((res)=>{
+    dispatch.auth.setUsername(res.data.username);
+    navigate("/");
+    // console.log("r",res.data);
+   })
+   .catch((res) => console.log(res))
+    console.log("res",response);
+
 }
+console.log(selectAuth)
   return (
     <StyledLogIn>
       <StyledFormLog>
@@ -170,7 +174,7 @@ const LogIn = () => {
                     </label>
                     <p>Forgot Password?</p>
                     <div className="showpw">
-                      <div className="spw" onclick="tog()">
+                      <div className="spw">
                         <ToggleEyes></ToggleEyes>
                       </div>
                       <input
