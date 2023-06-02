@@ -1,10 +1,11 @@
-import { Card, Space } from 'antd';
+import { Card } from 'antd';
 import styled from 'styled-components';
 const StyledCard = styled.div`
+  width: 100%;
+  margin-bottom: 20px;
 `
 const Cardd = ({title, extra, children, ...rest}) => (
   <StyledCard>
-    <Space direction="horizontal" size={16}>
       <Card
         title={title}
         extra={<p>{extra}</p>}
@@ -13,7 +14,6 @@ const Cardd = ({title, extra, children, ...rest}) => (
         >
         {children}
       </Card>
-    </Space>
   </StyledCard>
 );
 export default Cardd;
