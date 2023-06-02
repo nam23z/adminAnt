@@ -1,2 +1,2 @@
-import ListUser from "./ListUser";
-export default ListUser;
+import Users from "./Users";
+export default Users;

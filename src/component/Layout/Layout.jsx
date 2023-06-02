@@ -81,16 +81,12 @@ const LayoutPrimary = () => {
   } = theme.useToken();
 
   let navigate = useNavigate();
-  const [selectedMenuu, setSelectedMenu] = useState("1");
   const pac = (e) => {
-    // e.preventDefault();
     if (e.key === "1") {
-      setSelectedMenu("1");
       navigate("/");
     }
     if (e.key === "2") {
-      setSelectedMenu("2");
-      navigate("/user",{replace: true});
+      navigate("/user");
     }
   };
   return (
@@ -112,7 +108,7 @@ const LayoutPrimary = () => {
           </div>
           <Menu
             theme="dark"
-            defaultSelectedKeys={[selectedMenuu]}
+            defaultSelectedKeys={["1"]}
             defaultOpenKeys={['sub1']}
             items={items}
             mode="inline"

@@ -1,4 +1,3 @@
-import LayoutPrimary from "../../component/Layout";
 import styled from "styled-components";
 import Cardd from "../../component/Card";
 import { Chart,ChartRadialBar, ChartBar } from "../../component/Chart/index";
@@ -24,7 +23,7 @@ const Dashboard = () => {
 
             <StyledDashboard>
                 <div className="chartTop">
-                <Cardd className="cardd" title={"Users"} extra={"126,560 Users"}>
+                <Cardd className="cardd" title={"Token Price"}>
                             <Chart></Chart>
                         </Cardd>
                 </div>
@@ -37,11 +36,11 @@ const Dashboard = () => {
                 </Row> */}
                 <Row>
                     <Col span={12}>
-                        <Cardd className="card2" title={"Products"} extra={"8,864 Products"}><ChartRadialBar></ChartRadialBar></Cardd>
+                        <Cardd className="card2" title={"Money Allocation"}><ChartRadialBar></ChartRadialBar></Cardd>
                         
                     </Col>
                     <Col span={12}>
-                        <Cardd className="card3" title={"Orders"} extra={"126,560 Orders"}><ChartBar></ChartBar></Cardd>
+                        <Cardd className="card3" title={"Profit"}><ChartBar></ChartBar></Cardd>
                     </Col>
                 </Row>
             </StyledDashboard>
