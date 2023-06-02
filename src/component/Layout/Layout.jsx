@@ -24,7 +24,7 @@ import { useState } from "react";
 import Logo from "../../assets/logo.png";
 import styled from "styled-components";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 
 const StyledLogo = styled.div`
   width: 200px;
@@ -74,7 +74,7 @@ const items = [
   ]),
 ];
 
-const LayoutPrimary = ({ children }) => {
+const LayoutPrimary = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -164,7 +164,7 @@ const LayoutPrimary = ({ children }) => {
                 background: colorBgContainer,
               }}
             >
-              {children}
+              <Outlet></Outlet>
             </div>
           </Content>
           <Footer

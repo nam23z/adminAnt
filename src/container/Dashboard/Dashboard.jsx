@@ -21,7 +21,7 @@ const StyledDashboard = styled.div`
 `
 const Dashboard = () => {
     return(
-        <LayoutPrimary>
+
             <StyledDashboard>
                 <div className="chartTop">
                 <Cardd className="cardd" title={"Users"} extra={"126,560 Users"}>
@@ -45,7 +45,6 @@ const Dashboard = () => {
                     </Col>
                 </Row>
             </StyledDashboard>
-        </LayoutPrimary>
     )
 }
 export default Dashboard;

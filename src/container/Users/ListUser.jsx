@@ -9,11 +9,10 @@ const StyledListUser = styled.div`
 const ListUser = () => {
 
   return (
-    <LayoutPrimary>
+
       <StyledListUser>
         <Tabled></Tabled>
       </StyledListUser>
-    </LayoutPrimary>
   );
 };
 export default ListUser;
